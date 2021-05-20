@@ -28,7 +28,7 @@ from integresql_client_python import IntegreSQL
 
 integresql = IntegreSQL('template_directory')
 
-# i.debug = True
+# integresql.debug = True
 
 with integresql as tpl:
     with tpl.initialize() as dbinfo:
