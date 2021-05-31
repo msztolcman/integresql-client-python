@@ -9,7 +9,7 @@ with open('README.md') as f:
 
 setup(
     name='integresql-client-python',
-    version='0.9.0',
+    version='0.9.1',
     description='',
     long_description=readme,
     long_description_content_type='text/markdown',

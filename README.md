@@ -13,7 +13,7 @@ Python client for [IntegreSQL](https://github.com/allaboutapps/integresql).
 Current stable version
 ----------------------
 
-0.9.0
+0.9.1
 
 Python version
 --------------
