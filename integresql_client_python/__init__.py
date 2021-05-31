@@ -5,7 +5,7 @@ import http.client
 import os
 import pathlib
 import sys
-from typing import Optional, NoReturn, Union
+from typing import Optional, NoReturn, Union, List
 
 import requests
 
@@ -41,17 +41,26 @@ class DBInfo:
 class TemplateHash:
     BUFFER_SIZE = 4 * 1024
 
-    def __init__(self, template: Optional[str]) -> None:
-        self.template = template
+    def __init__(self, template: Union[str, List[str], pathlib.PurePath, List[pathlib.PurePath], None]) -> None:
+        if not isinstance(template, (list, tuple)):
+            template = [template]
+        self.templates = template
 
-        template = pathlib.Path(template)
-        if not template.exists():
-            raise RuntimeError(f"Path {template} doesn't exists")
+        mhash = hashlib.md5()
+        for template in self.templates:
+            if not isinstance(template, pathlib.PurePath):
+                template = pathlib.Path(template)
 
-        if not template.is_dir():
-            raise RuntimeError(f"Path {template} must be a directory")
+            if not template.exists():
+                raise RuntimeError(f"Path {template} doesn't exists")
 
-        self.hash = self.calculate(template)
+            if not template.is_dir():
+                raise RuntimeError(f"Path {template} must be a directory")
+
+            hashed = self.calculate(template)
+            mhash.update(hashed.encode())
+
+        self.hash = mhash.hexdigest()
 
     def __str__(self) -> str:
         return self.hash
@@ -167,8 +176,9 @@ class Template:
 
 
 class IntegreSQL:
-    def __init__(self, tpl_directory: Union[TemplateHash, str, None] = None, *,
-            base_url: Optional[str] = None, api_version: Optional[str] = None,
+    def __init__(self,
+        tpl_directory: Union[TemplateHash, str, List[str], pathlib.PurePath, List[pathlib.PurePath], None] = None, *,
+        base_url: Optional[str] = None, api_version: Optional[str] = None,
     ) -> None:
         if not base_url:
             base_url = os.environ.get(ENV_INTEGRESQL_CLIENT_BASE_URL, DEFAULT_CLIENT_BASE_URL)
@@ -188,15 +198,9 @@ class IntegreSQL:
         return self._tpl_hash
 
     @tpl_hash.setter
-    def tpl_hash(self, value: Union[str, TemplateHash, pathlib.PurePath]) -> NoReturn:
-        if isinstance(value, pathlib.PurePath):
-            value = str(value)
-
-        if isinstance(value, str):
-            value = TemplateHash(value)
-
+    def tpl_hash(self, value: Union[TemplateHash, pathlib.PurePath, str, List[str], List[pathlib.PurePath]]) -> NoReturn:
         if not isinstance(value, TemplateHash):
-            raise RuntimeError("tpl_hash must be str, pathlib.PurePath or TemplateHash instance")
+            value = TemplateHash(value)
 
         self._tpl_hash = value
 
