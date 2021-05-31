@@ -74,6 +74,10 @@ If you find a bug or have an idea to enhance this tool, please use GitHub's
 ChangeLog
 ---------
 
+### v0.9.1
+
+* allow using multiple template paths
+
 ### v0.9.0
 
 * first public version
