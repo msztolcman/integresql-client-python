@@ -73,6 +73,11 @@ If you find a bug or have an idea to enhance this tool, please use GitHub's
 
 ChangeLog
 ---------
+### v0.9.2
+
+* fixed a bug where test database was returned to pool after every test and got reused.
+  Renamed method `Database.close()` to `Database.mark_unmodified()`. Using
+  `Database` in `with` block doesn't return selected database to pool anymore.
 
 ### v0.9.1
 

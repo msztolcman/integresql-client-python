@@ -105,7 +105,7 @@ class Database:
         else:
             raise errors.IntegreSQLError(f"Received unexpected HTTP status {rsp.status_code}")
 
-    def close(self, db_id: Union[int, DBInfo]) -> NoReturn:
+    def mark_unmodified(self, db_id: Union[int, DBInfo]) -> NoReturn:
         if isinstance(db_id, DBInfo):
             db_id = db_id.db_id
 
@@ -128,8 +128,7 @@ class Database:
         return self.dbinfo
 
     def __exit__(self, exc_type, exc_val, exc_tb):  # noqa
-        if self.dbinfo:
-            return self.close(self.dbinfo)
+        pass
 
 
 class Template:
