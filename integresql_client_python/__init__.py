@@ -11,7 +11,7 @@ import requests
 
 from . import errors
 
-__version__ = '0.9.1'
+__version__ = '0.9.2'
 ENV_INTEGRESQL_CLIENT_BASE_URL = 'INTEGRESQL_CLIENT_BASE_URL'
 ENV_INTEGRESQL_CLIENT_API_VERSION = 'INTEGRESQL_CLIENT_API_VERSION'
 DEFAULT_CLIENT_BASE_URL = "http://integresql:5000/api"  # noqa
